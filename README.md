@@ -1,4 +1,4 @@
-#A SP500 Visualizer
+# A SP500 Visualizer
 
 A project for EDAV where I visualize different aspects of stocks that collectively make up the SP500.
 
