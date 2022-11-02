@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Proposal | A SP500 Visualizer</title>
-  <meta name="description" content="Chapter 2 Proposal | A SP500 Visualizer" />
+  <title>Chapter 2 Proposal | A Meme Stock Visualizer</title>
+  <meta name="description" content="Chapter 2 Proposal | A Meme Stock Visualizer" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Proposal | A SP500 Visualizer" />
+  <meta property="og:title" content="Chapter 2 Proposal | A Meme Stock Visualizer" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Proposal | A SP500 Visualizer" />
+  <meta name="twitter:title" content="Chapter 2 Proposal | A Meme Stock Visualizer" />
   
   
   
@@ -98,7 +98,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A SP500 Visualizer</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Meme Stock Visualizer</a>
           </h1>
         </div>
 
@@ -110,9 +110,17 @@
 <h1><span class="header-section-number">Chapter 2</span> Proposal<a href="proposal.html#proposal" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="research-topic" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Research topic<a href="proposal.html#research-topic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>My research will focus on the “meme stock” craze that has been going on the past year. Tickers such as Gamestop (GME) and AMC (AMC) have been in the forefront of retail investor’s minds. This project explores how well these stocks actually perform; it is easy to do this by tracking individual stocks, but investors almost never put their entire portfolio into a single stock; instead, they diversify their holdings to reduce risk of volatility. Therefore, to test whether these “wallstreetsbets” investors truly have an alpha (i.e. an edge) on the overall market, we simulate their positions by creating a “meme index” that buys all these different stocks and aggregates them under a single mock ETF (exchange-traded fund). We will visualize this ETF in a number of ways, and additionally add interactivity by letting the user drag a sliding bar that will show how the ETF performs daily, as well as how the stocks/components within change using a daily frequency.</p>
 </div>
 <div id="data-availability" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Data availability<a href="proposal.html#data-availability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Identify one or more data sources (see II. D. above) that you propose to draw on for the project. For each, describe how the data are collected and by whom. Describe the format of the data, the frequency of updates, and any other relevant information. Carefully document your sources with links. Explain how you plan to import the data.</p>
+<p>There are plenty of datasets available for us to get started on our project. We first have GME, whose daily closing prices can be found from <a href="https://finance.yahoo.com/quote/GME/history?p=GME" class="uri">https://finance.yahoo.com/quote/GME/history?p=GME</a>. This dataset is a clean dataset since we are guaranteed to have no NaN and no outliers. The format of the data is Date, Open, High, Low, Close, Adjusted Close, and Volume. We will be primarily focused on the past year’s worth of daily close prices from this dataset, of which it contains all data points necessary. The data is scraped from the daily opening price, the closing price, and the recorded high and low prices per trading day. All of this is collected by Yahoo Finance.</p>
+<p>Another dataset that we will use is AMC. The dataset can be found from <a href="https://finance.yahoo.com/quote/AMC/history?p=AMC" class="uri">https://finance.yahoo.com/quote/AMC/history?p=AMC</a>. This dataset is similar in structure to GME with the same column headings, data cleanliness (i.e. no missing prices, dates, etc.). Again, we will use the daily closing price for our project, which this dataset contains. The reason why we utilize this dataset is because AMC has been the second most popular stock amongst “meme investors”. This data is also scraped daily by Yahoo News at the closing bell.</p>
+<p>The third dataset that we will use is BBBY, which can be found at the following link: <a href="https://finance.yahoo.com/quote/BBBY/history?p=BBBY" class="uri">https://finance.yahoo.com/quote/BBBY/history?p=BBBY</a>. The format and cleanliness of the data is the same as the previous two, as well as the source and frequency of data scraped. The reason why we use BBBY is because it gained humongous popularity during August/September when it spiked by 400-500%.</p>
+<p>The fourth dataset that we will utilize is TLRY, which can be found at the following link: <a href="https://finance.yahoo.com/quote/TLRY/history?p=TLRY" class="uri">https://finance.yahoo.com/quote/TLRY/history?p=TLRY</a>. This stock has the same column headings and formatting as the previous stocks, and also comes from the same source with a daily frequency. The reason why we utilize this dataset is because it was also another meme stock that gained notoriety shortly after GME and AMC.</p>
+<p>The fifth dataset that we include in this list is Palantir Technologies (PLTR). The ticker price from the past year can be found at the following link ://finance.yahoo.com/quote/PLTR/history?p=PLTR. Column headings, formatting, and data cleanliness is the same as the previous datasets. The reason why we utilize this dataset is because the stock gained huge popiularity throughout COVID-19 because of its business model took advantage of the lockdowns. Even after those restrictions were lifted, meme investors have continued to talk about the stock, hence its continued popularity today.</p>
+<p>Although these five datasets would be sufficient to making a good index, we plan on including additional meme stocks over the next day or two to diversify our portfolio and to align our ETF to mirror meme stock investors’ portfolios more accurately. Yahoo Finance provides an API that lets us download the datasets (All of these prices will take the last 251 trading days, or past year of trading), in which we will utilize Python to clean the datasets before piping them into RStudio for visualization.</p>
 
 </div>
 </div>

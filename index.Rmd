@@ -1,5 +1,5 @@
 --- 
-title: "A SP500 Visualizer"
+title: "A Meme Stock Visualizer"
 author: "Nathan Ho"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
