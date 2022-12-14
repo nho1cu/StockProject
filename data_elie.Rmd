@@ -1,0 +1,151 @@
+# Data 
+
+## Sources
+As explained in the proposal we will work with financial meme stocks. The stocks we chose are : GME ( GameStop Corp), AMC (AMC Entertainment Holdings Inc), BBBY (Bed Bath & Beyond Inc), TLRY (Tilray Inc) and PLTR (Palantir Technologies Inc). They are all belonging to either the NYSE or to the NASDAQ. 
+
+We will use the following packages for getting the data : 
+
+```{r}
+list.of.packages <- c("quantmod", "tidyquant","pylr","dplyr","redav","tidyverse", "remotes","naniar", "rollRegres")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+remotes::install_github("jtr13/redav")
+```
+We can now load the packages :
+
+```{r}
+library(quantmod)
+library(tidyquant)
+library(plyr)
+library(dplyr)
+library(redav)
+library(naniar)
+library(rollRegres)
+```
+We need to specify during which period we want the data : 
+
+```{r}
+start_date <- as.Date("2022-01-01")
+end_date <- as.Date("2022-12-14")
+```
+
+```{r}
+getSymbols("GME", src= "yahoo", from = start_date,to = end_date)
+getSymbols("AMC", src = "yahoo",from = start_date,to = end_date)
+getSymbols("BBBY", src= "yahoo",from = start_date,to = end_date)
+getSymbols("TLRY.TO", src= "yahoo", from = start_date,to = end_date)
+getSymbols("PLTR", src= "yahoo", from = start_date,to = end_date)
+```
+
+Let's see what values does the quantmod packages returns. 
+
+```{r}
+head(GME)
+```
+As shown above, quantmod provides us the values of "Open", "High", "Low", "Close", "Volume" and "Adjusted" and Date for every day for each stock. 
+
+Let's check the class of our data.
+
+```{r}
+class(GME)
+```
+
+Let's transform our xts into tables: 
+
+```{r}
+gme <- as_tibble(GME)
+amc <- as_tibble(AMC)
+bbby <- as_tibble(BBBY)
+tlry <- as_tibble(TLRY.TO)
+pltr <- as_tibble(PLTR)
+```
+
+```{r}
+head(gme)
+```
+The dates are now missing but we can add them by using the index on our initial stocks :
+
+```{r}
+DATE <- index(AMC)
+```
+
+
+We can now add these dates to our tables : 
+
+
+```{r}
+amc <- amc %>% mutate(Date=DATE,.before=AMC.Open)
+gme <- gme %>% mutate(Date=DATE,.before=GME.Open) 
+bbby <- bbby %>% mutate(Date=DATE,.before=BBBY.Open)
+tlry <- tlry %>% mutate(Date=DATE,.before=TLRY.TO.Open) 
+pltr <- pltr %>% mutate(Date=DATE,.before=PLTR.Open) 
+```
+
+
+```{r}
+head(amc)
+```
+
+## Cleaning / transformation
+
+First, we have to check if there are any missing values for 3ach stock. 
+```{r}
+sum(is.na(gme))
+sum(is.na(amc))
+sum(is.na(bbby))
+sum(is.na(tlry))
+sum(is.na(pltr))
+```
+
+There are no missing values in our stocks which is good for our data vizualisation pipeline.
+We will now transform these stocks prices to calculate a new value : the return.
+
+```{r}
+amc_return <- amc %>% mutate(AMC.Return=(AMC.Close-AMC.Open)/(AMC.Open))
+gme_return <- gme %>% mutate(GME.Return=(GME.Close-GME.Open)/(GME.Open)) 
+bbby_return <- bbby %>% mutate(BBBY.Return=(BBBY.Close-BBBY.Open)/(BBBY.Open)) 
+tlry_return <- tlry %>% mutate(TLRY.TO.Return=(TLRY.TO.Close-TLRY.TO.Open)/(TLRY.TO.Open))
+pltr_return <- pltr %>% mutate(PLTR.Return=(PLTR.Close-PLTR.Open)/(PLTR.Open))
+```
+
+```{r}
+head(gme)
+```
+
+We can also calculate the rolling beta and alpha of a stock as well. This will be important, as beta tells us how an individual stock performs relative to the market, while alpha tells us the stock's excess return. We use a rolling window of 30. The following code creates this into one neat table:
+
+```{r}
+gme_close <- gme %>% pull(GME.Close)
+amc_close <- amc %>% pull(AMC.Close)
+bbby_close <- bbby %>% pull(BBBY.Close)
+tlry_close <- tlry %>% pull(TLRY.TO.Close)
+pltr_close <- pltr %>% pull(PLTR.Close)
+close_prices <- tibble(gme_close, amc_close, bbby_close, tlry_close, pltr_close)
+close_prices <- log(close_prices)
+beta_regression<-roll_regres(gme_close ~ pltr_close, close_prices, width = 30,
+            do_compute = c("sigmas", "r.squareds", "1_step_forecasts"))
+head(beta_regression)
+```
+
+We now have all the required informations for starting our data vizualisation!
+
+## Missing Value Analysis
+
+Although we have covered that there is missing data, we can visualize it by using a missing pattern graph, which can be found below.Please note that for the purposes of finding missing data, we merge the datasets to see if their are overarching patterns in the missing data.
+
+```{r}
+total_data <- join_all(list(gme,amc,bbby,tlry,pltr), type='left')
+plot_missing(total_data, percent = FALSE)
+```
+Although the labels are messy, one thing is clear: every single column is a complete case, which means that we do not have missing data throughout all our columns in all of our different stocks. We can also have an alternate view by using a heatmap of missing views:
+```{r}
+vis_miss(total_data)
+
+```
+Again, we see that out of all our observations, all of them are present, signifying that there are no missing values in our data.
+
+
+
+
+
+
