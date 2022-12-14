@@ -1,0 +1,6 @@
+#Initial Portfolio
+
+The way that we set our portfolio is that we take one share of each stock that we have chosen and aggregate it into 
+```{r}
+head(amc)
+```
