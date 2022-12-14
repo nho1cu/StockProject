@@ -6,7 +6,7 @@ As explained in the proposal we will work with financial meme stocks. The stocks
 We will use the following packages for getting the data : 
 
 ```{r}
-list.of.packages <- c("quantmod", "tidyquant","pylr","dplyr","redav","tidyverse", "remotes","naniar", "rollRegres", "zoo")
+list.of.packages <- c("quantmod", "tidyquant","pylr","dplyr","redav","tidyverse", "remotes","naniar", "rollRegres", "zoo", "plotly")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 remotes::install_github("jtr13/redav")
@@ -22,6 +22,7 @@ library(redav)
 library(naniar)
 library(rollRegres)
 library(zoo)
+library(plotly)
 ```
 We need to specify during which period we want the data : 
 
@@ -128,14 +129,42 @@ tlry_close <- tlry %>% pull(TLRY.TO.Close)
 pltr_close <- pltr %>% pull(PLTR.Close)
 spy_close <- spy %>% pull(SPY.Close)
 close_prices <- data.frame(gme_close, amc_close, bbby_close, tlry_close, pltr_close)
-portfolio_close <- log(rowSums(close_prices))
-spy_close <- log(spy_close)
-beta_comparison <- data.frame(portfolio_close, spy_close)
-beta_regression<-roll_regres(portfolio_close ~ spy_close, beta_comparison, width = 30,
+portfolio_close <- rowSums(close_prices)
+portfolio_close_log <- log(portfolio_close)
+spy_close_log <- log(spy_close)
+beta_comparison <- data.frame(portfolio_close_log, spy_close_log)
+beta_regression<-roll_regres(portfolio_close_log ~ spy_close_log, beta_comparison, width = 30,
             do_compute = c("sigmas", "r.squareds", "1_step_forecasts"))
 portfolio_moving_average <- rollmean(portfolio_close, k=30, fill=NA)
 spy_moving_average <- rollmean(spy_close, k=30, fill = NA)
 ```
+
+```{r}
+gme_open <- gme %>% pull(GME.Open)
+amc_open <- amc %>% pull(AMC.Open)
+bbby_open <- bbby %>% pull(BBBY.Open)
+tlry_open <- tlry %>% pull(TLRY.TO.Open)
+pltr_open <- pltr %>% pull(PLTR.Open)
+open_prices <- data.frame(gme_open, amc_open, bbby_open, tlry_open, pltr_open)
+portfolio_open <- rowSums(open_prices)
+gme_high <- gme %>% pull(GME.High)
+amc_high <- amc %>% pull(AMC.High)
+bbby_high <- bbby %>% pull(BBBY.High)
+tlry_high <- tlry %>% pull(TLRY.TO.High)
+pltr_high <- pltr %>% pull(PLTR.High)
+high_prices <- data.frame(gme_high, amc_high, bbby_high, tlry_high, pltr_high)
+portfolio_high <- rowSums(high_prices)
+gme_low <- gme %>% pull(GME.Low)
+amc_low <- amc %>% pull(AMC.Low)
+bbby_low <- bbby %>% pull(BBBY.Low)
+tlry_low <- tlry %>% pull(TLRY.TO.Low)
+pltr_low <- pltr %>% pull(PLTR.Low)
+low_prices <- data.frame(gme_low, amc_low, bbby_low, tlry_low, pltr_low)
+portfolio_low <- rowSums(low_prices)
+portfolio_data <- data.frame(DATE, portfolio_open, portfolio_high, portfolio_low, portfolio_close)
+```
+
+
 
 ```{r}
 myRSI <- function (price,n){
