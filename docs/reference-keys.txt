@@ -6,6 +6,5 @@ data
 sources
 cleaning-transformation
 missing-value-analysis
-results
 interactive-component
 conclusion
