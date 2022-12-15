@@ -1,1 +1,86 @@
 # Results
+
+
+The way that we set our portfolio is that we take one share of each stock that we have chosen and aggregate it into a single portfolio. Let us examine a brief overview of how our stock has performed in the past two years through the following candlestick chart:
+
+```{r}
+fig <- portfolio_data %>% plot_ly(x = ~DATE, type="candlestick",
+          open = ~portfolio_open, close = ~portfolio_close,
+          high = ~portfolio_high, low = ~portfolio_low, name= "Portfolio Candlestick") 
+fig <- fig %>% layout(title = "Meme Stock Portfolio Candlestick", yaxis = list(title = 'Price'), xaxis = list(title = 'Date'))
+fig <- fig %>% add_lines(x = ~DATE, y = ~portfolio_moving_average, name = "Moving Average",
+            line = list(color = '#000000', width = 1),
+            inherit = F) 
+fig
+```
+
+We can also obtain the candlestick chart of the SP500 (ticker: SPY) as a point of comparison of how our portfolio compares to the overall market:
+
+```{r}
+fig <- spy %>% plot_ly(x = ~Date, type="candlestick",
+          open = ~SPY.Open, close = ~SPY.Close,
+          high = ~SPY.High, low = ~SPY.Low, name = "SPY Candlestick") 
+fig <- fig %>% layout(title = "SP500 Portfolio Candlestick", yaxis = list(title = 'Price'), xaxis = list(title = 'Date'))
+fig <- fig %>% add_lines(x = ~DATE, y = ~spy_moving_average, name = "Moving Average",
+            line = list(color = '#000000', width = 1),
+            inherit = F) 
+fig
+```
+
+When looking at the two graphs, there are two big trends; notably, there is a big downtrend in price for both our portfolio and the market in general. It is easier to track this big downtrend when comparing the simple moving average (SMA, or the black line) of the two different stocks. The magnitude of these changes, however, is significant. While the S&P500 dropped approximately 25%, our new index dropped a whopping 63%. This my show that long-term investment in meme stocks may not be the best financial strategy for this year. The other trend is that there were two spikes upward in price for both our portfolio and the S&P500; these are in relation to Q1 and Q2 results from major companies, all of which were struggling to show good results due to supply chain shortage. In addition, portfolio managers shift a lot of money during this quarter, which could contribute to the increased volatility in both March and August. In this case, the S&P500 spiked by about 10% and 12% respectively; however, our meme stocks outperformed, spiking up a hefty 90% and 65%, respectively. Therefore, short-term or swing traders might have more profitable trades if playing for volatility.
+
+Although candlesticks are a good overview for both portfolios, it is hard to see overall trends even with the simple moving average. Therefore, to see longer-term trends, we can use the relative strength index (RSI) which indicates the relative strength of the price of the stock. We plot the RSI of our new portfolio, as well as the SPY as a point of comparison.
+
+```{r}
+library(plotly)
+fig <- plot_ly(alpha = 0.6, nbinsx = 17)
+fig <- fig %>% add_histogram(x=portfolio_rsi, name = "Meme Portfolio")
+fig <- fig %>% add_histogram(x=spy_rsi, name = "SP500")
+fig <- fig %>% layout(barmode = "stack")
+fig <- fig %>% layout(title = "RSI Distributions", yaxis = list(title = 'Count (Days)'), xaxis = list(title = 'RSI Daily Score'))
+fig
+```
+
+When looking at the distributions of RSI scores for both the S&P500 and the S&P500, we see that both are approximately normally distributed. This is a good sign for both our portfolio and the general market; if we see that there is significant skew to either side of the RSI daily score, this would mean a long term trend in being oversold (skew right) or being overbought (skew left). Therefore, by being normalized, long-term traders can know that both of these stock indices are relatively stable. It is important to note that the spread of values is more extreme for our meme stock index compared to the market index, which means that there are greater swings in buy/sell territories of RSI (that is, buy signal for RSI \< 30 and sell signal for RSI \> 70). Therefore, this might dissuade long-term traders from investing in a meme stock index, as more buy/sell signals means instability in stock price growth.
+
+Although the distributions are relatively similar, we can see if there were periods of time where either index outperformed the other. Therefore, we make a line chart of the RSI to see if there are periods in time where our portfolio outperforms the market.
+
+```{r}
+portfolio_rsi_df <- data.frame(portfolio_rsi)
+portfolio_rsi_above <- replace_with_na_all(data = portfolio_rsi_df,
+                    condition = ~.x < 70)
+portfolio_rsi_below <- replace_with_na_all(data = portfolio_rsi_df,
+                    condition = ~.x > 30)
+spy_rsi_df <- data.frame(spy_rsi)
+spy_rsi_above <- replace_with_na_all(data = spy_rsi_df,
+                    condition = ~.x < 70)
+spy_rsi_below <- replace_with_na_all(data = spy_rsi_df,
+                    condition = ~.x > 30)
+
+temp_data <- data.frame(DATE, portfolio_rsi, portfolio_rsi_above$portfolio_rsi, spy_rsi, portfolio_rsi_below$portfolio_rsi, spy_rsi_above$spy_rsi, spy_rsi_below$spy_rsi)
+```
+
+```{r}
+fig <- plot_ly(temp_data, x = ~DATE, y=portfolio_rsi, name = 'Portfolio RSI', type = 'scatter', mode = 'lines', line = list(color = '#1a17cf', width = 1))
+fig <- fig %>% add_trace(y = portfolio_rsi_above$portfolio_rsi, name = 'Portfolio RSI (Overbought)', mode = 'lines', line = list(color = '#cc1d10', width = 2))
+fig <- fig %>% add_trace(y = portfolio_rsi_below$portfolio_rsi, name = 'Portfolio RSI (Oversold)', mode = 'lines', line = list(color = '#1ed411', width = 2)) 
+fig <- fig %>% add_trace(y = spy_rsi, name = 'SPY RSI', mode = 'lines', line = list(color = '#000000', width = 1, dash = 'dot'))
+fig <- fig %>% add_trace(y = spy_rsi_above$spy_rsi, name = 'SPY RSI (Overbought)', mode = 'lines', line = list(color = '#cc1d10', width = 2, dash = 'dot')) 
+fig <- fig %>% add_trace(y = spy_rsi_below$spy_rsi, name = 'SPY RSI (Oversold)', mode = 'lines', line = list(color = '#1ed411', width = 2, dash = 'dot'))
+fig <- fig %>% layout(title = "RSI Time-Series", yaxis = list(title = 'RSI Score'), xaxis = list(title = 'Date'))
+fig
+```
+
+This graph is an important alternative look to the previous histogram, as it benefits short-term/swing traders more than long-term investors. There are several important trends to point out in this graph. We see that, while the spread of RSI buy/sell signals was more spread out for our meme stock index, the number of buy signals is a lot more frequent than the S&P500 (most notably in May, where there was a strong buy signal for 4 straight weeks!). Therefore, swing traders might benefit more from the meme stock index because the frequency and length of these buy signals. On the other hand, S&P500 signals to buy are very few and far between (i.e. in March, June, and December), which may not benefit swing traders looking to make it rich quick. On the other hand, the S&P only reached a sell signal once (in April), it was relatively mild and barely triggered with a score near 70. The story for the meme stock, on the other hand, is that when losses occur, they are big. When reaching overbought territory, RSI scores hit 79 and 93 respectively, which is nearly unheard of for big indexes and ETFs. With the right strategies (such as buying put options or shorting stock), swing traders can also profit off of these sell signals deep in the red. Therefore, we can conclude from this graph that, while holding throughout the year may result in better profitability for long-term investors, the right enter and exit strategies throughout the year (and a lot of luck) would actually result in higher returns for swing traders.
+
+Finally, we can see how our portfolio's alpha beta compares with the SPY. Because we utilize the SPY as our benchmark, we do not plot the SPY beta in this graph (i.e. it will always be one for beta, and zero for alpha).
+
+```{r}
+fig <- plot_ly(ab_values, x = ~Date, y = ab_values$spy_close_log, name = 'Beta', type='scatter', mode = 'lines', line = list(color = '#1a17cf', width = 1))
+fig <- fig %>% add_trace(y = ab_values$a_value, name = 'Alpha', mode = 'lines', line = list(color = '#cc1d10', width = 1))
+fig <- fig %>% layout(title = "Alpha and Beta", yaxis = list(title = 'Value'), xaxis = list(title = 'Date'))
+fig
+
+```
+
+When looking at the Beta and Alpha graph, the average investor would be slightly nervous, and rightly so. The beta is always above 1, and hovers between a value of 0.7 and 6. This means that our index is 0.7-6 times more volatile than the general market, which means any money invested has greater potential to gain or lose throughout the year due to high volatility. Generally, the higher the beta (and the greater the range of beta), the greater the risk+reward is compared to the general market. Although this may be good news for high-risk traders, the trade off may not be worth it. Generally, an alpha above 0 means that the stock performed relatively well compared to what the volatility of the stock predicted (for more information, please read on the CAPM model, of which this analysis is based). 0 means that it performed to expectation, and negative means it performed poorly to expectations. Our meme index firmly falls in this final category, with an alpha value as low as -34, which is nearly unattainable even for individual stocks, which typically have the highest beta, and therefore alpha, ranges. Therefore, both long-term traders and swing traders should stay far away from the index that we have generated, as returns for alpha very rarely reaches positive territory.

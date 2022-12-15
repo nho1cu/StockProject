@@ -1,8 +1,227 @@
 # Data 
 
 ## Sources
+As explained in the proposal we will work with financial meme stocks. The stocks we chose are the following: GME (GameStop Corp), AMC (AMC Entertainment Holdings Inc), BBBY (Bed Bath & Beyond Inc), TLRY (Tilray Inc) and PLTR (Palantir Technologies Inc). They are all belong to either the NYSE or to the NASDAQ. 
+
+We will use the following packages for getting the data : 
+
+```{r}
+list.of.packages <- c("quantmod", "tidyquant","pylr","dplyr","redav","tidyverse", "remotes","naniar", "rollRegres", "zoo", "plotly", "tseries")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.r-project.org")
+remotes::install_github("jtr13/redav")
+list.of.packages
+```
+
+```{r}
+library(quantmod)
+library(tidyquant)
+library(plyr)
+library(dplyr)
+library(redav)
+library(naniar)
+library(rollRegres)
+library(zoo)
+library(plotly)
+library(tseries)
+```
+We then use the QuantMod package to obtain our data. We use a date range from January 1, 2022 to the most recent date (December 14, 2022) for our stocks to get our YTD (Year to Date) data. Let's see what values does the quantmod packages returns.
+
+```{r}
+start_date <- as.Date("2022-01-01")
+end_date <- as.Date("2022-12-14")
+```
+
+```{r}
+getSymbols("GME", src= "yahoo", from = start_date,to = end_date)
+getSymbols("AMC", src = "yahoo",from = start_date,to = end_date)
+getSymbols("BBBY", src= "yahoo",from = start_date,to = end_date)
+getSymbols("TLRY.TO", src= "yahoo", from = start_date,to = end_date)
+getSymbols("PLTR", src= "yahoo", from = start_date,to = end_date)
+getSymbols("SPY", src = "yahoo", from = start_date, to = end_date)
+```
+
+
+```{r}
+head(GME)
+```
+As shown above, quantmod provides us the values of "Open", "High", "Low", "Close", "Volume" and "Adjusted" and Date for every day for each stock. 
+
+Let's check the class of our data.
+
+```{r}
+class(GME)
+```
+
+Let's transform our xts into tables: 
+
+```{r}
+gme <- as_tibble(GME)
+amc <- as_tibble(AMC)
+bbby <- as_tibble(BBBY)
+tlry <- as_tibble(TLRY.TO)
+pltr <- as_tibble(PLTR)
+spy <- as_tibble(SPY)
+```
+
+```{r}
+head(gme)
+```
+The dates are now missing but we can add them by using the index on our initial stocks :
+
+```{r echo=TRUE}
+DATE <- index(AMC)
+```
+
+
+We can now add these dates to our tables : 
+
+
+```{r}
+amc <- amc %>% mutate(Date=DATE,.before=AMC.Open)
+gme <- gme %>% mutate(Date=DATE,.before=GME.Open) 
+bbby <- bbby %>% mutate(Date=DATE,.before=BBBY.Open)
+tlry <- tlry %>% mutate(Date=DATE,.before=TLRY.TO.Open) 
+pltr <- pltr %>% mutate(Date=DATE,.before=PLTR.Open)
+spy <- spy %>% mutate(Date=DATE,.before=SPY.Open)
+```
+
+
+```{r}
+head(amc)
+```
 
 ## Cleaning / transformation
 
-## Missing value analysis
+First, we have to check if there are any missing values for each stock. 
+```{r echo=TRUE}
+sum(is.na(gme))
+sum(is.na(amc))
+sum(is.na(bbby))
+sum(is.na(tlry))
+sum(is.na(pltr))
+sum(is.na(spy))
+```
 
+There are no missing values in our stocks which is good for our data visualization pipeline.
+We will now transform these stocks prices to calculate a new value: the return.
+
+```{r}
+amc_return <- amc %>% mutate(AMC.Return=(AMC.Close-AMC.Open)/(AMC.Open))
+gme_return <- gme %>% mutate(GME.Return=(GME.Close-GME.Open)/(GME.Open)) 
+bbby_return <- bbby %>% mutate(BBBY.Return=(BBBY.Close-BBBY.Open)/(BBBY.Open)) 
+tlry_return <- tlry %>% mutate(TLRY.TO.Return=(TLRY.TO.Close-TLRY.TO.Open)/(TLRY.TO.Open))
+pltr_return <- pltr %>% mutate(PLTR.Return=(PLTR.Close-PLTR.Open)/(PLTR.Open))
+spy_return <- spy %>% mutate(SPY.Return=(SPY.Close-SPY.Open)/(SPY.Open))
+```
+
+```{r}
+head(gme)
+```
+
+We can also calculate the rolling beta and alpha of a stock as well. This will be important, as beta tells us how an individual stock performs relative to the market, while alpha tells us the stock's excess return. We use a rolling window of 30. We also get the simple moving average (SMA) of our newly created portfolio to detected long-term trends. Finally, we calculate RSI (we base our code off this website: https://bookdown.org/kochiuyu/technical-analysis-with-r-second-edition2/relative-strength-index-rsi.html) to compare the performance of our portfolio with the SP500
+
+```{r}
+gme_close <- gme %>% pull(GME.Close)
+amc_close <- amc %>% pull(AMC.Close)
+bbby_close <- bbby %>% pull(BBBY.Close)
+tlry_close <- tlry %>% pull(TLRY.TO.Close)
+pltr_close <- pltr %>% pull(PLTR.Close)
+spy_close <- spy %>% pull(SPY.Close)
+close_prices <- data.frame(gme_close, amc_close, bbby_close, tlry_close, pltr_close)
+portfolio_close <- rowSums(close_prices)
+portfolio_close_log <- log(portfolio_close)
+spy_close_log <- log(spy_close)
+beta_comparison <- data.frame(portfolio_close_log, spy_close_log)
+beta_regression<-roll_regres(portfolio_close_log ~ spy_close_log, beta_comparison, width = 30)
+portfolio_moving_average <- rollmean(portfolio_close, k=30, fill=NA)
+spy_moving_average <- rollmean(spy_close, k=30, fill = NA)
+print("Portfolio Moving Average (First 5 Values):")
+portfolio_moving_average[c(15, 16, 17, 18, 19, 20)]
+print("SPY Moving Average (First 5 Values):")
+spy_moving_average[c(15, 16, 17, 18, 19, 20)]
+```
+
+```{r}
+ab_values<-as.data.frame(beta_regression$coefs)
+ab_values <- tibble::rownames_to_column(ab_values)
+ab_values$Date<-DATE
+ab_values$a_value <- ab_values$`(Intercept)`
+ab_values$beta_value <- ab_values$spy_close_log
+tail(ab_values)
+
+```
+
+```{r}
+gme_open <- gme %>% pull(GME.Open)
+amc_open <- amc %>% pull(AMC.Open)
+bbby_open <- bbby %>% pull(BBBY.Open)
+tlry_open <- tlry %>% pull(TLRY.TO.Open)
+pltr_open <- pltr %>% pull(PLTR.Open)
+open_prices <- data.frame(gme_open, amc_open, bbby_open, tlry_open, pltr_open)
+portfolio_open <- rowSums(open_prices)
+gme_high <- gme %>% pull(GME.High)
+amc_high <- amc %>% pull(AMC.High)
+bbby_high <- bbby %>% pull(BBBY.High)
+tlry_high <- tlry %>% pull(TLRY.TO.High)
+pltr_high <- pltr %>% pull(PLTR.High)
+high_prices <- data.frame(gme_high, amc_high, bbby_high, tlry_high, pltr_high)
+portfolio_high <- rowSums(high_prices)
+gme_low <- gme %>% pull(GME.Low)
+amc_low <- amc %>% pull(AMC.Low)
+bbby_low <- bbby %>% pull(BBBY.Low)
+tlry_low <- tlry %>% pull(TLRY.TO.Low)
+pltr_low <- pltr %>% pull(PLTR.Low)
+low_prices <- data.frame(gme_low, amc_low, bbby_low, tlry_low, pltr_low)
+portfolio_low <- rowSums(low_prices)
+portfolio_data <- data.frame(DATE, portfolio_open, portfolio_high, portfolio_low, portfolio_close)
+head(portfolio_data)
+```
+
+
+
+```{r}
+myRSI <- function (price,n){
+  N <- length(price)
+  U <- rep(0,N)
+  D <- rep(0,N)
+  rsi <- rep(NA,N)
+  Lprice <- Lag(price,1)
+  for (i in 2:N){
+    if (price[i]>=Lprice[i]){
+      U[i] <- 1
+    } else {
+      D[i] <- 1
+    }
+    if (i>n){
+      AvgUp <- mean(U[(i-n+1):i])
+      AvgDn <- mean(D[(i-n+1):i])
+      rsi[i] <- AvgUp/(AvgUp+AvgDn)*100 
+      }
+    }
+  rsi <- reclass(rsi, price)
+  return(rsi)
+}
+
+portfolio_rsi <- myRSI(portfolio_close, n=14)
+spy_rsi <- myRSI(spy_close, n=14)
+print("First 5 Values of Portfolio RSI: ")
+portfolio_rsi[c(15, 16, 17, 18, 19, 20)]
+print("First 5 Values of SPY RSI: ")
+spy_rsi[c(15, 16, 17, 18, 19, 20)]
+```
+We now have all the required information for starting our data visualization!
+
+## Missing Value Analysis
+
+Although we have covered that there is missing data, we can visualize it by using a missing pattern graph, which can be found below.Please note that for the purposes of finding missing data, we merge the datasets to see if their are overarching patterns in the missing data.
+
+```{r}
+total_data <- join_all(list(gme,amc,bbby,tlry,pltr, spy), type='left')
+plot_missing(total_data, percent = FALSE)
+```
+Although the labels are messy, one thing is clear: every single column is a complete case, which means that we do not have missing data throughout all our columns in all of our different stocks. We can also have an alternate view by using a heatmap of missing views:
+```{r}
+vis_miss(total_data)
+```
+Again, we see that out of all our observations, all of them are present, signifying that there are no missing values in our data.
