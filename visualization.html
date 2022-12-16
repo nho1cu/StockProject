@@ -8,14 +8,14 @@
         <div id='vis-container'></div>
         <div id='dropContainer'><select id ='dropButton'></select></div>
         <script>
-        d3.csv("https://raw.githubusercontent.com/nho1cu/StockProject/main/age-distribution.csv", function (d){
+        d3.csv("stocks.csv", function (d){
             return {
                 year : +d.year,
                 age : d.age,
                 value : +d.value,
             };
         }).then(function(data) {
-            var date = "1950";
+            var date = 1;
             var initialData = getYearData(date);
             var yAxisLabels = getAgeData();
             //Set up margins
@@ -32,7 +32,7 @@
             //make x scale
             var xScale = d3.scaleLinear()
                 .range([0, width])
-                .domain([0, 15]);
+                .domain([0, 60]);
 
             //Create canvas
             var canvas = d3.select("#vis-container")
@@ -49,15 +49,15 @@
                         .call(yAxis);
                 canvas.append("text")
                         .style("text-anchor", "end")
-                        .text("Age Group")
+                        .text("Stock")
                         .attr("x", -5)
                         .style("font-size", "12px")
                 canvas.append("text")
-                    .text("Age Distribution of the World in 1950")
+                    .text("Stock Distribution in Q1")
                     .attr("id", "title")
                     .attr("y",-40)
                 canvas.append("text")
-                    .text("Year")
+                    .text("Quarter")
                     .attr("x", width/3)
                     .attr("y", height+25);
             // Make x-axis and add to canvas
@@ -71,7 +71,7 @@
                     .attr("y", -25)
                     .attr("x", width/3)
                     .style("font-size", "12px")
-                    .text("Population Percentage");
+                    .text("Stock Percentage of Index");
 
                 canvas.append("select")
                     .attr("id", "selectButton");
@@ -92,19 +92,19 @@
                 .append("rect")
                     .attr("class", "bar")
                     .attr("y", function(d,i) { return yScale( yAxisLabels[i] ); })
-                    .attr("height", 20)
+                    .attr("height", 60)
                     .attr("x", function(d,i) { return xScale(d); })
                     .attr("width", function(d) { return xScale(d.value*100); })
-                    .style("fill", "#ff8e00");
+                    .style("fill", "#24c943");
 
                 // Update old ones, already have y / height from before
                 bars
                     .transition().duration(250)
                     .attr("y", function(d,i) { return yScale( yAxisLabels[i] ); })
-                    .attr("height", 20)
+                    .attr("height", 60)
                     .attr("x", function(d,i) { return xScale(d); })
                     .attr("width", function(d) { return xScale(d.value*100); })
-                    .style("fill", "#ff8e00");
+                    .style("fill", "#24c943");
 
                 // Remove old ones
                 bars.exit().remove();    
@@ -112,7 +112,7 @@
                 //Iteratively change the title
                 var title = canvas.select("#title").data(updated_data);
                 title.transition().duration(250)
-                        .text("Age Distribution of the World in " + updated_data[0].year)
+                        .text("Stock Distribution in Q" + updated_data[0].year)
                         .attr("y",-40);
 
             }
@@ -138,10 +138,12 @@
             //Handles getting age groups for axis
             function getAgeData() {
                 allAgeGroups = [];
+                console.log(initialData[0])
                 for (let i = 0; i < initialData.length; i++) {
                         allAgeGroups.push(initialData[i].age.toString());
                 }
                 return allAgeGroups;
+                
             }
             //Variable containing all the years for dropdown
             var allYears = data.map(item => item.year).filter((value, index, self) => self.indexOf(value) === index);
