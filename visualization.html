@@ -14,24 +14,66 @@
 
 	<body>
 		<svg width="500" height="300">  <!-- some SVG -->
-			<circle cx="50" cy="75" r="20" fill="blue"></circle>
+			<circle cx="50" cy="75" r="10" fill="blue"></circle>
+			<circle cx="50" cy="100" r="10" fill="yellow"></circle>
+			<circle cx="50" cy="125" r="10" fill="green"></circle>
+			<circle cx="50" cy="150" r="10" fill="purple"></circle>
+			<circle cx="50" cy="175" r="10" fill="pink"></circle>
 		</svg>
 
 		<script>
-		var data = [10, 15, 20, 25, 30];
-		var width = 400,
-        height = 100;
-        var scale = d3.scaleLinear()
-                  .domain([d3.min(data), d3.max(data)])
-                  .range([0, width - 100]);
-        var svg = d3.select("body")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height);
-        var x_axis = d3.axisBottom()
-                   .scale(scale);
-    svg.append("g")
-       .call(x_axis);
+		const w = 500;
+  const h = 500;
+  const margin = {top: 25, right: 0, bottom: 25,
+      left: 25};
+  const innerWidth = w - margin.left - margin.right;
+  const innerHeight = h - margin.top - margin.bottom;
+
+  const marketcap = [300, 100, 150, 220, 70, 270];
+  const totalreturn = [-100, 100]
+
+  const xScale = d3.scaleBand()
+      .domain(d3.range(marketcap.length))
+      .range([0, innerWidth])
+      .paddingInner(.1);
+
+  const yScale = d3.scaleLinear()
+      .domain([d3.min(totalreturn), d3.max(totalreturn)])
+      .range([innerHeight, 0])
+
+  const xAxis = d3.axisBottom()
+      .scale(xScale);
+
+  const yAxis = d3.axisLeft()
+      .scale(yScale);
+
+// add svg
+
+  const svg = d3.select("body")
+    .append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+// add background rectangle
+
+  svg.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", w)
+      .attr("height", h)
+      .attr("fill", "aliceblue");
+
+// add axes
+
+  svg.append("g")
+      .attr("class", "xAxis")
+      .attr("transform", `translate (${margin.left}+50, ${h - margin.bottom}/4)`)
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "yAxis")
+      .attr("transform", `translate (${margin.left}, ${margin.top})`)
+      .call(yAxis);
 		</script>
 
 	</body>
