@@ -7,5 +7,11 @@ sources
 cleaning-transformation
 missing-value-analysis
 results
+comparing-the-portfolio-to-the-market
+rsi-market-comparison
+analyzing-alpha-and-beta
+correlation-matrices
+volume-analysis
+market-cap-analysis
 interactive-component
 conclusion

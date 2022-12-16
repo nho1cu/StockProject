@@ -12,3 +12,8 @@ pre {
 pre code {
   white-space: inherit;
 }
+#dropContainer {
+    width: 400px;
+    border: 15px solid white;
+    padding-left: 122px;
+}

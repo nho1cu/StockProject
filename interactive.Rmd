@@ -1,6 +1,4 @@
 # Interactive component
 
-
-<script src="https://d3js.org/d3.v7.js"></script>
-<div id="mysvg"></div>
-<script src="scripts/interactive_component.js"></script>
+ <iframe src="visualization.html" width="600" height="700"></iframe>
+ 
