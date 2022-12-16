@@ -115,7 +115,9 @@ scale_x_discrete(guide = guide_axis(angle = 90))+
 ggtitle("Correlation matrix of the stocks close prices")
 ```
 
-Traders are buying and selling meme stocks together this could explain the correlation between those 5 meme stocks. Some are indeed very correlated such as AMC and GME which were very trendy stocks for meme stocks traders.
+We can see on these two charts that the close prices are more correlated than the return of the stocks. Traders are buying and selling meme stocks together this could explain the important correlation between the close prices of the stocks. Some are indeed very correlated such as AMC and GME which have been very trendy stocks for familiar meme stocks traders.Meme stocks became popular because of its connection to popular online culture. These stocks have seen dramatic price increases due to the buying frenzy of retail investors. The correlation between meme stocks is a result of the same retail investors who have been driving the prices up in the first place. Since many of these investors are buying and selling the same stocks, the prices of these stocks tend to move in unison. For example, the recent surge in GameStop stock prices led to a similar increase in AMC Entertainment, Nokia, and Bed Bath & Beyond. This correlation is due to the same retail investors who are trading in these stocks and driving up their prices. As more investors enter the market and buy and sell these stocks, the correlation between them will likely increase.
+
+On the other hand the return is less correlated, this could de linked to the magnitude in change of prices. These stocks spike and dip at the same time but at different magnitude, this could explain the lower correlation of the return.
  
 
 ```{r include=FALSE}
@@ -138,14 +140,14 @@ volume <- tibble(date, gme_vol,amc_vol,bbby_vol,tlry_vol,pltr_vol)
 
 ```
 
-```{r}
+```{r include=FALSE}
 
 library(data.table)
 volume_2 <- setDT(volume)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
        mean(x, na.rm=TRUE) else NA_real_) ,
              by = .(Month= format(as.IDate(date), '%b-%Y'))]
 ```
-```{r}
+```{r include=FALSE}
 volume_2
 ```
 
@@ -172,7 +174,7 @@ ggplot(v, aes(fill=stock, y=volume, x=(Month))) +
     scale_x_discrete(limits = months,guide = guide_axis(angle = 90))+
     ggtitle("Stacked bar chart of the repartition of the Volume ")
 ```
-
+To see the repartition of the investments, we can take a look at the volume invested in the different meme stocks. PLTR and AMC have the biggest volume on each month of this period. BBBY has an increasing volume from January to his high in August. The volume invested in GME as been decreasing on the period. We can try to link of this pattern to the news. In August BBBY announced it would close 150 stores, cut jobs and overhaul its merchandising strategy in an attempt to turn around its money-losing business.The shares fell as much as 26.5%. This explain that a lot of people could have sell together their shares.
 ```{r include=FALSE}
 return_prices <- tibble(date,gme_return$GME.Close, amc_return$AMC.Close, bbby_return$BBBY.Close,tlry_return$TLRY.TO.Close, pltr_return$PLTR.Close)
 
@@ -233,7 +235,7 @@ ggplot(final_market_cap_2, aes(fill=stock, y=Market_Cap, x=Month))+
     scale_x_discrete(limits = months,guide = guide_axis(angle = 90))+
     ggtitle("Stacked bar chart of the Market Capitalization of our five stocks ")
 ```
-
+We can notice the crash of Palantir between April 2022 and May 2022. The shares crashed after the first quarter earnings and guidance fell short of investors' expectations. Palantir generated an operating loss of 39 Millions$. The adjusted earnings per share was 50% lower than the expectations. This chart also reveals a crash in AMC in August 2022 that happened after the Fed's July meeting.
 
 
 
