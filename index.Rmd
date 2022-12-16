@@ -1,9 +1,10 @@
 --- 
-title: "A Meme Stock Visualizer"
-author: "Nathan Ho"
+title: "The Meme Stock Portfolio"
+author: "Nathan Ho and Elie Dufeu Goldenberg"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
 # Introduction
 
+For the past two years, the stock market has seen many ups and downs. From the coronavirus crash in 2020 to the rapid rise in inflation to supply chain issues and war in Europe, the financial and economic events during this period has made headlines. However, there has never been a more bizarre event for the average retail investor than the waves of "meme stock crazes" that have repeatedly rocked the market. With the introduction of trading platforms such as Robinhood and social media sites like Reddit, individual traders have won and lost fortunes in the span of hours or even minutes. Therefore, this project serves to highlight these meme stocks by creating a mock portfolio to track the progress these meme stocks, and visualize different facets of this portfolio to see whether these retail investors really have an edge over the market, or if it is all simply a trend with no financial upside. 

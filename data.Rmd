@@ -6,7 +6,7 @@ As explained in the proposal we will work with financial meme stocks. The stocks
 We will use the following packages for getting the data : 
 
 ```{r}
-list.of.packages <- c("quantmod", "tidyquant","pylr","dplyr","redav","tidyverse", "remotes","naniar", "rollRegres", "zoo", "plotly", "tseries")
+list.of.packages <- c("quantmod", "tidyquant","pylr","dplyr","redav","tidyverse", "remotes","naniar", "rollRegres", "zoo", "plotly", "tseries", "ggplot2", "reshape2", "lubridate", "tidyr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.us.r-project.org")
 remotes::install_github("jtr13/redav")
@@ -24,6 +24,10 @@ library(rollRegres)
 library(zoo)
 library(plotly)
 library(tseries)
+library(reshape2)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
 ```
 We then use the QuantMod package to obtain our data. We use a date range from January 1, 2022 to the most recent date (December 14, 2022) for our stocks to get our YTD (Year to Date) data. Let's see what values does the quantmod packages returns.
 

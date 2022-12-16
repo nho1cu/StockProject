@@ -4,23 +4,23 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Data | A Meme Stock Visualizer</title>
-  <meta name="description" content="Chapter 3 Data | A Meme Stock Visualizer" />
+  <title>Chapter 3 Data | The Meme Stock Portfolio</title>
+  <meta name="description" content="Chapter 3 Data | The Meme Stock Portfolio" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Data | A Meme Stock Visualizer" />
+  <meta property="og:title" content="Chapter 3 Data | The Meme Stock Portfolio" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Data | A Meme Stock Visualizer" />
+  <meta name="twitter:title" content="Chapter 3 Data | The Meme Stock Portfolio" />
   
   
   
 
-<meta name="author" content="Nathan Ho" />
+<meta name="author" content="Nathan Ho and Elie Dufeu Goldenberg" />
 
 
 <meta name="date" content="2022-12-15" />
@@ -169,7 +169,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Meme Stock Visualizer</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">The Meme Stock Portfolio</a>
           </h1>
         </div>
 
@@ -185,7 +185,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We will use the following packages for getting the data :</p>
 <pre><code>##  [1] &quot;quantmod&quot;   &quot;tidyquant&quot;  &quot;pylr&quot;       &quot;dplyr&quot;      &quot;redav&quot;     
 ##  [6] &quot;tidyverse&quot;  &quot;remotes&quot;    &quot;naniar&quot;     &quot;rollRegres&quot; &quot;zoo&quot;       
-## [11] &quot;plotly&quot;     &quot;tseries&quot;</code></pre>
+## [11] &quot;plotly&quot;     &quot;tseries&quot;    &quot;ggplot2&quot;    &quot;reshape2&quot;   &quot;lubridate&quot; 
+## [16] &quot;tidyr&quot;</code></pre>
 <p>We then use the QuantMod package to obtain our data. We use a date range from January 1, 2022 to the most recent date (December 14, 2022) for our stocks to get our YTD (Year to Date) data. Let’s see what values does the quantmod packages returns.</p>
 <pre><code>## [1] &quot;GME&quot;</code></pre>
 <pre><code>## [1] &quot;AMC&quot;</code></pre>

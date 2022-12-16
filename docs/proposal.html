@@ -4,23 +4,23 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Proposal | A Meme Stock Visualizer</title>
-  <meta name="description" content="Chapter 2 Proposal | A Meme Stock Visualizer" />
+  <title>Chapter 2 Proposal | The Meme Stock Portfolio</title>
+  <meta name="description" content="Chapter 2 Proposal | The Meme Stock Portfolio" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Proposal | A Meme Stock Visualizer" />
+  <meta property="og:title" content="Chapter 2 Proposal | The Meme Stock Portfolio" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Proposal | A Meme Stock Visualizer" />
+  <meta name="twitter:title" content="Chapter 2 Proposal | The Meme Stock Portfolio" />
   
   
   
 
-<meta name="author" content="Nathan Ho" />
+<meta name="author" content="Nathan Ho and Elie Dufeu Goldenberg" />
 
 
 <meta name="date" content="2022-12-15" />
@@ -169,7 +169,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Meme Stock Visualizer</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">The Meme Stock Portfolio</a>
           </h1>
         </div>
 
@@ -185,7 +185,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="data-availability" class="section level2 hasAnchor" number="2.2">
 <h2><span class="header-section-number">2.2</span> Data availability<a href="proposal.html#data-availability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Identify one or more data sources (see II. D. above) that you propose to draw on for the project. For each, describe how the data are collected and by whom. Describe the format of the data, the frequency of updates, and any other relevant information. Carefully document your sources with links. Explain how you plan to import the data.</p>
 <p>There are plenty of datasets available for us to get started on our project. We first have GME, whose daily closing prices can be found from <a href="https://finance.yahoo.com/quote/GME/history?p=GME" class="uri">https://finance.yahoo.com/quote/GME/history?p=GME</a>. This dataset is a clean dataset since we are guaranteed to have no NaN and no outliers. The format of the data is Date, Open, High, Low, Close, Adjusted Close, and Volume. We will be primarily focused on the past year’s worth of daily close prices from this dataset, of which it contains all data points necessary. The data is scraped from the daily opening price, the closing price, and the recorded high and low prices per trading day. All of this is collected by Yahoo Finance.</p>
 <p>Another dataset that we will use is AMC. The dataset can be found from <a href="https://finance.yahoo.com/quote/AMC/history?p=AMC" class="uri">https://finance.yahoo.com/quote/AMC/history?p=AMC</a>. This dataset is similar in structure to GME with the same column headings, data cleanliness (i.e. no missing prices, dates, etc.). Again, we will use the daily closing price for our project, which this dataset contains. The reason why we utilize this dataset is because AMC has been the second most popular stock amongst “meme investors”. This data is also scraped daily by Yahoo News at the closing bell.</p>
 <p>The third dataset that we will use is BBBY, which can be found at the following link: <a href="https://finance.yahoo.com/quote/BBBY/history?p=BBBY" class="uri">https://finance.yahoo.com/quote/BBBY/history?p=BBBY</a>. The format and cleanliness of the data is the same as the previous two, as well as the source and frequency of data scraped. The reason why we use BBBY is because it gained humongous popularity during August/September when it spiked by 400-500%.</p>

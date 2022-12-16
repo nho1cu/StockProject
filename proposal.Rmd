@@ -6,8 +6,6 @@ My research will focus on the "meme stock" craze that has been going on the past
 
 ## Data availability
 
-Identify one or more data sources (see II. D. above) that you propose to draw on for the project. For each, describe how the data are collected and by whom. Describe the format of the data, the frequency of updates, and any other relevant information. Carefully document your sources with links. Explain how you plan to import the data.
-
 There are plenty of datasets available for us to get started on our project. We first have GME, whose daily closing prices can be found from https://finance.yahoo.com/quote/GME/history?p=GME. This dataset is a clean dataset since we are guaranteed to have no NaN and no outliers. The format of the data is Date, Open, High, Low, Close, Adjusted Close, and Volume. We will be primarily focused on the past year's worth of daily close prices from this dataset, of which it contains all data points necessary. The data is scraped from the daily opening price, the closing price, and the recorded high and low prices per trading day. All of this is collected by Yahoo Finance.
 
 Another dataset that we will use is AMC. The dataset can be found from https://finance.yahoo.com/quote/AMC/history?p=AMC. This dataset is similar in structure to GME with the same column headings, data cleanliness (i.e. no missing prices, dates, etc.). Again, we will use the daily closing price for our project, which this dataset contains. The reason why we utilize this dataset is because AMC has been the second most popular stock amongst "meme investors". This data is also scraped daily by Yahoo News at the closing bell.

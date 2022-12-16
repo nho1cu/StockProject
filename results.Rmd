@@ -32,7 +32,6 @@ When looking at the two graphs, there are two big trends; notably, there is a bi
 Although candlesticks are a good overview for both portfolios, it is hard to see overall trends even with the simple moving average. Therefore, to see longer-term trends, we can use the relative strength index (RSI) which indicates the relative strength of the price of the stock. We plot the RSI of our new portfolio, as well as the SPY as a point of comparison.
 
 ```{r}
-library(plotly)
 fig <- plot_ly(alpha = 0.6, nbinsx = 17)
 fig <- fig %>% add_histogram(x=portfolio_rsi, name = "Meme Portfolio")
 fig <- fig %>% add_histogram(x=spy_rsi, name = "SP500")
@@ -84,3 +83,158 @@ fig
 ```
 
 When looking at the Beta and Alpha graph, the average investor would be slightly nervous, and rightly so. The beta is always above 1, and hovers between a value of 0.7 and 6. This means that our index is 0.7-6 times more volatile than the general market, which means any money invested has greater potential to gain or lose throughout the year due to high volatility. Generally, the higher the beta (and the greater the range of beta), the greater the risk+reward is compared to the general market. Although this may be good news for high-risk traders, the trade off may not be worth it. Generally, an alpha above 0 means that the stock performed relatively well compared to what the volatility of the stock predicted (for more information, please read on the CAPM model, of which this analysis is based). 0 means that it performed to expectation, and negative means it performed poorly to expectations. Our meme index firmly falls in this final category, with an alpha value as low as -34, which is nearly unattainable even for individual stocks, which typically have the highest beta, and therefore alpha, ranges. Therefore, both long-term traders and swing traders should stay far away from the index that we have generated, as returns for alpha very rarely reaches positive territory.
+
+As we have seen in class, it could be interesting to plot the correlation matrix for the closes prices and for the daily returns of our stocks. These charts could reveal a global dynamic for the meme stocks :
+
+```{r}
+return_prices <- tibble(gme_return$GME.Return, amc_return$AMC.Return, bbby_return$BBBY.Return,tlry_return$TLRY.TO.Return, pltr_return$PLTR.Return)
+
+```
+
+```{r}
+corr_mat <- round(cor(return_prices),2)
+melted_corr_mat <- melt(corr_mat)
+ggplot(data = melted_corr_mat, aes(x=Var1, y=Var2,
+                                   fill=value)) +
+geom_tile() +
+geom_text(aes(Var2, Var1, label = value),
+          color = "black", size = 4)+
+scale_x_discrete(guide = guide_axis(angle = 90))+
+ggtitle("Correlation matrix of the stocks return")
+```
+
+```{r}
+corr_mat_2 <- round(cor(close_prices),2)
+melted_corr_mat_2 <- melt(corr_mat_2)
+ggplot(data = melted_corr_mat_2, aes(x=Var1, y=Var2,
+                                   fill=value)) +
+geom_tile() +
+geom_text(aes(Var2, Var1, label = value),
+          color = "black", size = 4)+
+scale_x_discrete(guide = guide_axis(angle = 90))+
+ggtitle("Correlation matrix of the stocks close prices")
+```
+
+Traders are buying and selling meme stocks together this could explain the correlation between those 5 meme stocks. Some are indeed very correlated such as AMC and GME which were very trendy stocks for meme stocks traders.
+ 
+
+```{r include=FALSE}
+date <- gme %>% pull(Date)
+gme_vol <- gme %>% pull(GME.Volume)
+#gme_volume <- tibble(date,gme_vol)
+
+amc_vol <- amc %>% pull(AMC.Volume)
+#amc_volume <- tibble(date, amc_vol)
+
+bbby_vol <- bbby %>% pull(BBBY.Volume)
+#bbby_volume <- tibble(date, bbby_vol)
+
+tlry_vol <- tlry %>% pull(TLRY.TO.Volume)
+#tlry_volume <- tibble(date, tlry_vol)
+
+pltr_vol <- pltr %>% pull(PLTR.Volume)
+#pltr_volume <- tibble(date, pltr_vol)
+volume <- tibble(date, gme_vol,amc_vol,bbby_vol,tlry_vol,pltr_vol)
+
+```
+
+```{r}
+
+library(data.table)
+volume_2 <- setDT(volume)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
+       mean(x, na.rm=TRUE) else NA_real_) ,
+             by = .(Month= format(as.IDate(date), '%b-%Y'))]
+```
+```{r}
+volume_2
+```
+
+
+```{r include=FALSE}
+v <- volume_2 %>%
+  pivot_longer(
+    cols = ends_with("vol"),
+    names_to = "stock",
+    names_prefix = "vol",
+    values_to = "volume",
+    values_drop_na = TRUE
+  )
+v
+```
+
+#Problem of the order of the months to fix 
+
+```{r}
+months <- c("Jan_2022","Feb-2022","Mar-2022","Apr-2022","May-2022","Jun-2022","Jul-2022","Aug-2022","Sep-2022","Oct-2022","Nov-2022","Dec-2022")
+
+ggplot(v, aes(fill=stock, y=volume, x=(Month))) + 
+    geom_bar(position="fill", stat="identity")+
+    scale_x_discrete(limits = months,guide = guide_axis(angle = 90))+
+    ggtitle("Stacked bar chart of the repartition of the Volume ")
+```
+
+```{r include=FALSE}
+return_prices <- tibble(date,gme_return$GME.Close, amc_return$AMC.Close, bbby_return$BBBY.Close,tlry_return$TLRY.TO.Close, pltr_return$PLTR.Close)
+
+outstading_shares_BBBY <- 101060000
+outstading_shares_AMC <- 517000000
+outstading_shares_GME <- 304580000
+outstading_shares_PLTR <- 1980000000
+outstading_shares_TLRY <- 611400000
+
+rp_2 <- setDT(return_prices)[,lapply(.SD, function(x) if(length(na.omit(x)) >=15)
+       mean(x, na.rm=TRUE) else NA_real_) ,
+             by = .(Month= format(as.IDate(date), '%b-%Y'))]
+
+rp_2
+```
+
+```{r}
+outstanding_shares<-c(outstading_shares_GME,outstading_shares_AMC,outstading_shares_BBBY,outstading_shares_TLRY,outstading_shares_PLTR)
+
+months <- subset(rp_2, select = c("Month"))
+rp_3 <- subset( rp_2, select = -c(Month ) )
+```
+
+
+
+```{r include=FALSE}
+rp_3
+```
+
+
+
+```{r include=FALSE}
+mc <-t(t(rp_3)*outstanding_shares)
+final_market_cap <- data.table(months, mc)
+colnames(final_market_cap) <- c('Month','Market_Cap_GME','Market_Cap_AMC','Market_Cap_BBBY','Market_Cap_TLRY','Market_Cap_PLTR')
+
+final_market_cap
+```
+
+```{r include=FALSE}
+final_market_cap_2 <- final_market_cap %>%
+  pivot_longer(
+    cols = starts_with("Market"),
+    names_to = "stock",
+    names_prefix = "Market",
+    values_to = "Market_Cap",
+    values_drop_na = TRUE
+  )
+final_market_cap_2
+
+months <- c("Jan_2022","Feb-2022","Mar-2022","Apr-2022","May-2022","Jun-2022","Jul-2022","Aug-2022","Sep-2022","Oct-2022","Nov-2022","Dec-2022")
+```
+
+
+```{r}
+ggplot(final_market_cap_2, aes(fill=stock, y=Market_Cap, x=Month))+ 
+    geom_bar(position="dodge", stat="identity")+
+    scale_x_discrete(limits = months,guide = guide_axis(angle = 90))+
+    ggtitle("Stacked bar chart of the Market Capitalization of our five stocks ")
+```
+
+
+
+
+
