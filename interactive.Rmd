@@ -2,3 +2,4 @@
 
  <iframe src="visualization.html" width="600" height="700"></iframe>
  
+Here, the user can interactively view the percentage makeup of our stock index. It is divided into quarters, and the user can see the percentage makeup according to quarter.

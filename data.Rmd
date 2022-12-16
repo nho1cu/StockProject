@@ -224,8 +224,11 @@ Although we have covered that there is missing data, we can visualize it by usin
 total_data <- join_all(list(gme,amc,bbby,tlry,pltr, spy), type='left')
 plot_missing(total_data, percent = FALSE)
 ```
+
 Although the labels are messy, one thing is clear: every single column is a complete case, which means that we do not have missing data throughout all our columns in all of our different stocks. We can also have an alternate view by using a heatmap of missing views:
 ```{r}
 vis_miss(total_data)
 ```
+
 Again, we see that out of all our observations, all of them are present, signifying that there are no missing values in our data.
+

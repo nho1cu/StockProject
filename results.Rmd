@@ -2,7 +2,7 @@
 
 ## Comparing the Portfolio to the Market
 
-The way that we set our portfolio is that we take one share of each stock that we have chosen and aggregate it into a single portfolio. Let us examine a brief overview of how our stock has performed in the past two years through the following candlestick chart:
+The way that we set our portfolio is that we take one share of each stock that we have chosen and aggregate it into a single portfolio. Let us examine a brief overview of how our portfolio has performed in the past two years through the following candlestick chart:
 
 ```{r}
 fig <- portfolio_data %>% plot_ly(x = ~DATE, type="candlestick",
@@ -28,7 +28,7 @@ fig <- fig %>% add_lines(x = ~DATE, y = ~spy_moving_average, name = "Moving Aver
 fig
 ```
 
-When looking at the two graphs, there are two big trends; notably, there is a big downtrend in price for both our portfolio and the market in general. It is easier to track this big downtrend when comparing the simple moving average (SMA, or the black line) of the two different stocks. The magnitude of these changes, however, is significant. While the S&P500 dropped approximately 25%, our new index dropped a whopping 63%. This my show that long-term investment in meme stocks may not be the best financial strategy for this year. The other trend is that there were two spikes upward in price for both our portfolio and the S&P500; these are in relation to Q1 and Q2 results from major companies, all of which were struggling to show good results due to supply chain shortage. In addition, portfolio managers shift a lot of money during this quarter, which could contribute to the increased volatility in both March and August. In this case, the S&P500 spiked by about 10% and 12% respectively; however, our meme stocks outperformed, spiking up a hefty 90% and 65%, respectively. Therefore, short-term or swing traders might have more profitable trades if playing for volatility.
+When looking at the two graphs, there are two big trends; notably, there is a big downtrend in price for both our portfolio and the market in general. It is easier to track this big downtrend when comparing the simple moving average (SMA, or the black line) of the two different stocks. The magnitude of these changes, however, is significant. While the S&P500 dropped approximately 25%, our new index dropped a whopping 63%. This shows that long-term investment in meme stocks may not be the best financial strategy for this year. The other trend is that there were two spikes upward in price for both our portfolio and the S&P500; these are in relation to Q1 and Q2 results from major companies, all of which were struggling to show good results due to supply chain shortages. In addition, portfolio managers shift a lot of money during this quarter into safer assets before/after earnings, which could contribute to the increased volatility in both March and August. During these two time periods, the S&P500 spiked by about 10% and 12% respectively; however, our meme stocks outperformed, spiking up a hefty 90% and 65%, respectively. Therefore, short-term or swing traders might have more profitable trades if playing for volatility.
 
 ## RSI Market Comparison
 
@@ -43,7 +43,7 @@ fig <- fig %>% layout(title = "RSI Distributions", yaxis = list(title = 'Count (
 fig
 ```
 
-When looking at the distributions of RSI scores for both the S&P500 and the S&P500, we see that both are approximately normally distributed. This is a good sign for both our portfolio and the general market; if we see that there is significant skew to either side of the RSI daily score, this would mean a long term trend in being oversold (skew right) or being overbought (skew left). Therefore, by being normalized, long-term traders can know that both of these stock indices are relatively stable. It is important to note that the spread of values is more extreme for our meme stock index compared to the market index, which means that there are greater swings in buy/sell territories of RSI (that is, buy signal for RSI \< 30 and sell signal for RSI \> 70). Therefore, this might dissuade long-term traders from investing in a meme stock index, as more buy/sell signals means instability in stock price growth.
+When looking at the distributions of RSI scores for both our portfolio and the S&P500, we see that both are approximately normally distributed. This is a good sign for both our portfolio and the general market; if we see that there is significant skew to either side of the RSI daily score, this would mean a long term trend in being oversold (skew right) or being overbought (skew left). Therefore, by being normalized, long-term traders can know that both of these stock indices are relatively stable. It is important to note that the spread of values is more extreme for our meme stock index compared to the market index, which means that there are greater swings in buy/sell territories of RSI (that is, buy signal for RSI \< 30 and sell signal for RSI \> 70). Therefore, this might dissuade long-term traders from investing in a meme stock index, as more buy/sell signals means instability in stock price growth.
 
 Although the distributions are relatively similar, we can see if there were periods of time where either index outperformed the other. Therefore, we make a line chart of the RSI to see if there are periods in time where our portfolio outperforms the market.
 
@@ -243,7 +243,5 @@ ggplot(final_market_cap_2, aes(fill=stock, y=Market_Cap, x=Month))+
     ggtitle("Stacked bar chart of the Market Capitalization of our five stocks ")
 ```
 We can notice the crash of Palantir between April 2022 and May 2022. The shares crashed after the first quarter earnings and guidance fell short of investors' expectations. Palantir generated an operating loss of 39 Millions$. The adjusted earnings per share was 50% lower than the expectations. This chart also reveals a crash in AMC in August 2022 that happened after the Fed's July meeting.
-
-
 
 
