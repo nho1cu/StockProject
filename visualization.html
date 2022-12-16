@@ -8,7 +8,7 @@
         <div id='vis-container'></div>
         <div id='dropContainer'><select id ='dropButton'></select></div>
         <script>
-        d3.csv("stocks.csv", function (d){
+        d3.csv("https://raw.githubusercontent.com/nho1cu/StockProject/main/stocks.csv", function (d){
             return {
                 year : +d.year,
                 age : d.age,
