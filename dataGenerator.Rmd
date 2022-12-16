@@ -1,0 +1,17 @@
+```{r}
+library(d3r)
+
+# Build a dummy data frame
+startData <- data.frame(
+  level2=c( rep("boss1",4), rep("boss2",4), rep("boss3",6)),
+  level3=paste0("mister_", letters[1:14]),
+  value=rep(23,14),
+  group=c("A","A","C","C","C","A","B","B","B","A","A","D","D","D" )
+)
+
+# Create the json format. Note that columns that are leave features are specified.
+a <- d3_nest(startData, root="CEO", value_cols=c("group", "value"))
+
+# Save it in a .json file
+write(a, "stock_data.json")
+```
