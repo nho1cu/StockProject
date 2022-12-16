@@ -91,7 +91,7 @@ When looking at the Beta and Alpha graph, the average investor would be slightly
 
 ## Correlation Matrices
 
-As we have seen in class, it could be interesting to plot the correlation matrix for the closes prices and for the daily returns of our stocks. These charts could reveal a global dynamic for the meme stocks :
+As we have seen in class, it could be interesting to plot the correlation matrix for the close prices and for the daily returns of our stocks. These charts could reveal a global dynamic for the meme stocks:
 
 ```{r}
 return_prices <- tibble(gme_return$GME.Return, amc_return$AMC.Return, bbby_return$BBBY.Return,tlry_return$TLRY.TO.Return, pltr_return$PLTR.Return)
@@ -181,7 +181,8 @@ ggplot(v, aes(fill=stock, y=volume, x=(Month))) +
     scale_x_discrete(limits = months,guide = guide_axis(angle = 90))+
     ggtitle("Stacked bar chart of the repartition of the Volume ")
 ```
-To see the repartition of the investments, we can take a look at the volume invested in the different meme stocks. PLTR and AMC have the biggest volume on each month of this period. BBBY has an increasing volume from January to his high in August. The volume invested in GME as been decreasing on the period. We can try to link of this pattern to the news. In August BBBY announced it would close 150 stores, cut jobs and overhaul its merchandising strategy in an attempt to turn around its money-losing business.The shares fell as much as 26.5%. This explain that a lot of people could have sell together their shares.
+
+To see the repartition of the investments, we can take a look at the volume invested in the different meme stocks. PLTR and AMC have the biggest volume on each month of this period. BBBY has an increasing volume from January to its high in August due to increased retail investor interest. It has since tapered off, however, which correlates closely to its rapidly decreasing stock price. We can try to link of this pattern to the news. In August BBBY announced it would close 150 stores, cut jobs and overhaul its merchandising strategy in an attempt to turn around its money-losing business.The shares fell as much as 26.5%. This explain that a lot of people could have sell together their shares. The volume invested in GME has been decreasing during this period, which makes sense as we see a lot less volatility in this stock compared to large spikes in both 2020 and 2021. Overall, it seems that spikes in price closely relates to massive changes in volume, which gives investors an additional data point to consider when looking for profitable trades.
 ```{r include=FALSE}
 return_prices <- tibble(date,gme_return$GME.Close, amc_return$AMC.Close, bbby_return$BBBY.Close,tlry_return$TLRY.TO.Close, pltr_return$PLTR.Close)
 
@@ -242,6 +243,7 @@ ggplot(final_market_cap_2, aes(fill=stock, y=Market_Cap, x=Month))+
     scale_x_discrete(limits = months,guide = guide_axis(angle = 90))+
     ggtitle("Stacked bar chart of the Market Capitalization of our five stocks ")
 ```
-We can notice the crash of Palantir between April 2022 and May 2022. The shares crashed after the first quarter earnings and guidance fell short of investors' expectations. Palantir generated an operating loss of 39 Millions$. The adjusted earnings per share was 50% lower than the expectations. This chart also reveals a crash in AMC in August 2022 that happened after the Fed's July meeting.
+
+We can notice the crash of Palantir between April 2022 and May 2022. The shares crashed after the first quarter earnings and guidance fell short of investors' expectations. Palantir generated an operating loss of 39 million dollars. The adjusted earnings per share was 50% lower than the expectations, which made many investors lose confidence in the company. This chart also reveals a crash in AMC in August 2022 that happened after the Fed's July meeting, showing that meme stocks still have some exposure to macroeconomic (or market level) events. We also see a general downtrend in market cap throughout the year; this may suggest that there is a positive correlation between market cap and stock price. It is worth noting that PLTR still has the highest market cap out of all stocks despite not having the highest price (GME does throughout the past year); therefore, investors should consider shares of stock owned as another major indicator of a company's health as well, and not just price.
 
 
