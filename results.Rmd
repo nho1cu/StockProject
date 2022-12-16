@@ -124,7 +124,7 @@ ggtitle("Correlation matrix of the stocks close prices")
 
 We can see on these two charts that the close prices are more correlated than the return of the stocks. Traders are buying and selling meme stocks together this could explain the important correlation between the close prices of the stocks. Some are indeed very correlated such as AMC and GME which have been very trendy stocks for familiar meme stocks traders.Meme stocks became popular because of its connection to popular online culture. These stocks have seen dramatic price increases due to the buying frenzy of retail investors. The correlation between meme stocks is a result of the same retail investors who have been driving the prices up in the first place. Since many of these investors are buying and selling the same stocks, the prices of these stocks tend to move in unison. For example, the recent surge in GameStop stock prices led to a similar increase in AMC Entertainment, Nokia, and Bed Bath & Beyond. This correlation is due to the same retail investors who are trading in these stocks and driving up their prices. As more investors enter the market and buy and sell these stocks, the correlation between them will likely increase.
 
-On the other hand the return is less correlated, this could de linked to the magnitude in change of prices. These stocks spike and dip at the same time but at different magnitude, this could explain the lower correlation of the return.
+On the other hand the return is less correlated, this could be linked to the magnitude in change of prices. These stocks spike and dip at the same time but at different magnitude, this could explain the lower correlation of the return.
  
 
 ```{r include=FALSE}
